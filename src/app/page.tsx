@@ -39,7 +39,7 @@ export default function Home() {
       <div className="mx-auto flex min-h-screen w-full max-w-[1280px] flex-col items-center gap-8 px-4 py-4 sm:px-6 sm:py-6">
         <header className="flex w-full flex-col items-center gap-1 py-4">
           <h1 className="text-center text-[24px] font-bold leading-8 tracking-[-0.6px] text-text-primary">
-            Easing Tool
+            GLIDE
           </h1>
           <p className="text-center text-[14px] leading-5 text-text-secondary">
             Visual easing curve editor with multi-platform code export
@@ -101,7 +101,7 @@ export default function Home() {
         </main>
 
         <footer className="w-full py-6 text-center text-[12px] leading-4 text-text-secondary">
-          Easing Tool {" "}— Internal Team Tool
+          GLIDE {" "}— Internal Team Tool
         </footer>
       </div>
     </div>

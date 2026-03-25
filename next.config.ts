@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const isGitHubPages = process.env.GITHUB_PAGES === "true";
-const repoName = "easing-tool";
+const repoName = "glide";
 
 const nextConfig: NextConfig = isGitHubPages
   ? {

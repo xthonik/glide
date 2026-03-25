@@ -1,4 +1,4 @@
-# Easing Tool
+# GLIDE
 
 Interactive easing editor for building, previewing, and sharing motion curves with multi-platform code export.
 

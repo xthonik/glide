@@ -13,7 +13,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Easing Tool",
+  title: "GLIDE",
   description: "Visual easing curve editor with code export",
 };
 
