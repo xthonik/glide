@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BezierCurve } from "@/types";
 import { roundTo, clampX } from "@/lib/bezier";
 
@@ -26,19 +26,15 @@ function InputRow({
 }) {
   const [draftValue, setDraftValue] = useState(roundTo(value).toString());
   const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    if (!isEditing) {
-      setDraftValue(roundTo(value).toString());
-    }
-  }, [isEditing, value]);
+  const formattedValue = roundTo(value).toString();
+  const displayValue = isEditing ? draftValue : formattedValue;
 
   const commitValue = () => {
     setIsEditing(false);
 
     let nextValue = parseFloat(draftValue);
     if (isNaN(nextValue)) {
-      setDraftValue(roundTo(value).toString());
+      setDraftValue(formattedValue);
       return;
     }
 
@@ -70,8 +66,11 @@ function InputRow({
         step={0.01}
         min={min}
         max={max}
-        value={draftValue}
-        onFocus={() => setIsEditing(true)}
+        value={displayValue}
+        onFocus={() => {
+          setDraftValue(formattedValue);
+          setIsEditing(true);
+        }}
         onBlur={commitValue}
         onChange={(e) => setDraftValue(e.target.value)}
         onKeyDown={(e) => {

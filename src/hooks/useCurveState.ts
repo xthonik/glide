@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import { BezierCurve } from "@/types";
 import { clampX } from "@/lib/bezier";
 import { decodeCurveFromURL, updateURLState } from "@/lib/url";
@@ -9,20 +9,23 @@ const DEFAULT_CURVE: BezierCurve = { x1: 0.42, y1: 0, x2: 0.58, y2: 1 };
 const DEFAULT_DURATION = 400;
 const DEFAULT_DELAY = 500;
 
-export function useCurveState() {
-  const [curve, setCurveRaw] = useState<BezierCurve>(DEFAULT_CURVE);
-  const [duration, setDuration] = useState(DEFAULT_DURATION);
-  const [delay, setDelay] = useState(DEFAULT_DELAY);
-  const urlUpdateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+function getInitialState() {
+  if (typeof window === "undefined") {
+    return {
+      curve: DEFAULT_CURVE,
+      duration: DEFAULT_DURATION,
+      delay: DEFAULT_DELAY,
+    };
+  }
 
-  // Read from URL on mount
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const { curve: urlCurve, duration: urlDuration, delay: urlDelay } = decodeCurveFromURL(params);
-    setCurveRaw(urlCurve);
-    setDuration(urlDuration);
-    setDelay(urlDelay);
-  }, []);
+  return decodeCurveFromURL(new URLSearchParams(window.location.search));
+}
+
+export function useCurveState() {
+  const [curve, setCurveRaw] = useState<BezierCurve>(() => getInitialState().curve);
+  const [duration, setDuration] = useState(() => getInitialState().duration);
+  const [delay, setDelay] = useState(() => getInitialState().delay);
+  const urlUpdateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Debounced URL update
   const scheduleURLUpdate = useCallback((c: BezierCurve, d: number, dl: number) => {

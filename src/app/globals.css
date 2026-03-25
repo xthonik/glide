@@ -16,8 +16,8 @@
   --color-curve-end: #ffffff;
   --color-glow: rgba(168, 85, 247, 0.3);
 
-  --font-sans: "Golos Text", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: var(--font-golos-text), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 html {

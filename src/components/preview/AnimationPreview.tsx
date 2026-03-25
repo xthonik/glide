@@ -28,7 +28,6 @@ const properties: { key: AnimationProperty; label: string }[] = [
   { key: "shape", label: "Shape" },
 ];
 
-const infinityIcon = "http://localhost:3845/assets/d712f846268664d507f95c46a457c475470519ab.svg";
 function getAnimationFrames(property: AnimationProperty): Keyframe[] {
   const startFrame: Keyframe = {
     transform: "none",
@@ -177,11 +176,25 @@ export default function AnimationPreview({ curve, duration, delay }: AnimationPr
             aria-pressed={looping}
             aria-label="Loop preview"
           >
-            <img
-              alt=""
-              src={infinityIcon}
-              className={`h-[8px] w-[14px] ${looping ? "" : "grayscale brightness-75"}`}
-            />
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 14 8"
+              className="h-[8px] w-[14px]"
+              fill="none"
+            >
+              <path
+                d="M1 4c1.1-1.33 2.17-2 3.2-2 1.7 0 2.27 1.1 2.8 2 .53.9 1.1 2 2.8 2 1.03 0 2.1-.67 3.2-2"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="1.4"
+              />
+              <path
+                d="M1 4c1.1 1.33 2.17 2 3.2 2 1.7 0 2.27-1.1 2.8-2 .53-.9 1.1-2 2.8-2 1.03 0 2.1.67 3.2 2"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="1.4"
+              />
+            </svg>
           </button>
         </div>
       </div>

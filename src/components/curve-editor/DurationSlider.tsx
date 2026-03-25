@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface DurationSliderProps {
   label?: string;
@@ -21,12 +21,7 @@ export default function DurationSlider({
 }: DurationSliderProps) {
   const [draftValue, setDraftValue] = useState(value.toString());
   const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    if (!isEditing) {
-      setDraftValue(value.toString());
-    }
-  }, [isEditing, value]);
+  const displayValue = isEditing ? draftValue : value.toString();
 
   const commitValue = () => {
     setIsEditing(false);
@@ -65,8 +60,11 @@ export default function DurationSlider({
         min={min}
         max={max}
         step={step}
-        value={draftValue}
-        onFocus={() => setIsEditing(true)}
+        value={displayValue}
+        onFocus={() => {
+          setDraftValue(value.toString());
+          setIsEditing(true);
+        }}
         onBlur={commitValue}
         onChange={(e) => setDraftValue(e.target.value)}
         onKeyDown={(e) => {
