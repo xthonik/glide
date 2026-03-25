@@ -85,7 +85,7 @@ export default function Home() {
           <section className={`${cardClass} min-h-[192px] sm:col-span-2 lg:col-span-4`}>
             <h2 className={sectionTitleClass}>Code</h2>
             <div className="mt-3">
-              <CodePanel easing={easing} duration={duration} delay={delay} accuracy={accuracy} />
+              <CodePanel easing={easing} duration={duration} accuracy={accuracy} />
             </div>
           </section>
 

@@ -7,7 +7,6 @@ import { codeGenerators, platformLabels } from "@/lib/code-templates";
 interface CodePanelProps {
   easing: EasingDefinition;
   duration: number;
-  delay: number;
   accuracy: SamplingAccuracy;
 }
 
@@ -21,11 +20,11 @@ const platforms: Platform[] = [
   "raw",
 ];
 
-export default function CodePanel({ easing, duration, delay, accuracy }: CodePanelProps) {
+export default function CodePanel({ easing, duration, accuracy }: CodePanelProps) {
   const [platform, setPlatform] = useState<Platform>("css");
   const [copied, setCopied] = useState(false);
 
-  const snippet = codeGenerators[platform](easing, duration, delay, accuracy);
+  const snippet = codeGenerators[platform](easing, duration, accuracy);
 
   const handleCopy = async () => {
     try {

@@ -132,7 +132,7 @@ function getSamples(easing: EasingDefinition, accuracy: SamplingAccuracy): Sampl
   return getSampledPoints(easing, accuracy);
 }
 
-function cssSnippet(easing: EasingDefinition, duration: number, delay: number, accuracy: SamplingAccuracy): GeneratedSnippet {
+function cssSnippet(easing: EasingDefinition, duration: number, accuracy: SamplingAccuracy): GeneratedSnippet {
   if (easing.type === "wiggle") {
     const samples = getSamples(easing, accuracy);
 
@@ -141,7 +141,7 @@ function cssSnippet(easing: EasingDefinition, duration: number, delay: number, a
 ${toCssWiggleKeyframes(samples)}
 }
 
-animation: wiggleOffset ${duration}ms linear ${delay}ms 1 both;`,
+animation: wiggleOffset ${duration}ms linear 1 both;`,
       note: "Wiggle is exported as additive keyframes. Apply it to a transform offset and tune `--wiggle-amplitude` for the desired strength.",
     };
   }
@@ -153,8 +153,7 @@ animation: wiggleOffset ${duration}ms linear ${delay}ms 1 both;`,
 
   return {
     code: `transition-timing-function: ${timingFunction};
-transition-duration: ${duration}ms;
-transition-delay: ${delay}ms;`,
+transition-duration: ${duration}ms;`,
     note: isOscillationEasing(easing)
       ? "Wiggle returns to 0 and is best used as an additive oscillation, not a one-way transition."
       : undefined,
@@ -202,7 +201,6 @@ animation.isAdditive = false`,
 function swiftUiSnippet(
   easing: EasingDefinition,
   duration: number,
-  _delay: number,
   accuracy: SamplingAccuracy
 ): GeneratedSnippet {
   if (easing.type === "bezier") {
@@ -243,7 +241,6 @@ function swiftUiSnippet(
 function uikitSnippet(
   easing: EasingDefinition,
   duration: number,
-  _delay: number,
   accuracy: SamplingAccuracy
 ): GeneratedSnippet {
   if (easing.type === "bezier") {
@@ -281,7 +278,6 @@ let animator = UIViewPropertyAnimator(
 function coreAnimationSnippet(
   easing: EasingDefinition,
   duration: number,
-  _delay: number,
   accuracy: SamplingAccuracy
 ): GeneratedSnippet {
   if (easing.type === "bezier") {
@@ -312,7 +308,6 @@ animation.duration = ${durationSec(duration)}`,
 function composeSnippet(
   easing: EasingDefinition,
   duration: number,
-  _delay: number,
   accuracy: SamplingAccuracy
 ): GeneratedSnippet {
   if (easing.type === "bezier") {
@@ -363,7 +358,6 @@ animateFloatAsState(
 function androidViewSnippet(
   easing: EasingDefinition,
   duration: number,
-  _delay: number,
   accuracy: SamplingAccuracy
 ): GeneratedSnippet {
   if (easing.type === "bezier") {
@@ -410,7 +404,7 @@ ObjectAnimator.ofFloat(view, "translationX", 0f, targetValue).apply {
   };
 }
 
-function rawSnippet(easing: EasingDefinition, duration: number, delay: number, accuracy: SamplingAccuracy): GeneratedSnippet {
+function rawSnippet(easing: EasingDefinition, duration: number, accuracy: SamplingAccuracy): GeneratedSnippet {
   const cssLinear = easing.type === "bezier" ? null : getCssEasingValue(easing, accuracy);
   const samples = easing.type === "bezier" ? [] : getSamples(easing, accuracy);
 
@@ -419,7 +413,6 @@ function rawSnippet(easing: EasingDefinition, duration: number, delay: number, a
   "type": "${easing.type}",
   "params": ${JSON.stringify(getRawParams(easing), null, 2).replace(/\n/g, "\n  ")},
   "duration": ${duration},
-  "delay": ${delay},
   "accuracy": "${accuracy}",${
     easing.type === "bezier"
       ? `
@@ -436,7 +429,7 @@ ${toJsonSamples(samples)}
 
 export const codeGenerators: Record<
   Platform,
-  (easing: EasingDefinition, durationMs: number, delayMs: number, accuracy: SamplingAccuracy) => GeneratedSnippet
+  (easing: EasingDefinition, durationMs: number, accuracy: SamplingAccuracy) => GeneratedSnippet
 > = {
   css: cssSnippet,
   swiftui: swiftUiSnippet,
