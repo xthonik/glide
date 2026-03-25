@@ -111,7 +111,7 @@ jobs:
           fi
 
   deploy:
-    if: github.event_name == 'push' && needs.build.outputs.can_deploy == 'true'
+    if: needs.build.outputs.can_deploy == 'true'
     needs: build
     runs-on: ubuntu-latest
     environment:
