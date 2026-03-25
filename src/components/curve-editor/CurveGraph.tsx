@@ -1,31 +1,53 @@
 "use client";
 
-import { useRef } from "react";
-import { BezierCurve } from "@/types";
+import { useMemo, useRef } from "react";
+import { EasingDefinition, SamplingAccuracy } from "@/types";
 import { generateSVGPath } from "@/lib/bezier";
+import { getGraphBounds, getPreviewSamples, isOscillationEasing } from "@/lib/easing";
 import GridSurface from "@/components/shared/GridSurface";
 import ControlPoint from "./ControlPoint";
 
 interface CurveGraphProps {
-  curve: BezierCurve;
+  easing: EasingDefinition;
+  accuracy: SamplingAccuracy;
   onControlPointDrag: (point: "p1" | "p2", x: number, y: number) => void;
 }
 
-export default function CurveGraph({ curve, onControlPointDrag }: CurveGraphProps) {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const path = generateSVGPath(curve);
+function toGraphY(value: number, min: number, max: number, invert: boolean): number {
+  const range = max - min || 1;
+  const normalized = (value - min) / range;
+  return invert ? normalized : 1 - normalized;
+}
 
-  const viewBox = "0 0 1 1";
+function buildSamplePath(easing: EasingDefinition, accuracy: SamplingAccuracy): string {
+  const samples = getPreviewSamples(easing);
+  const bounds = getGraphBounds(easing, accuracy);
+  const invert = easing.type === "bounce";
+
+  return samples
+    .map((point, index) => {
+      const y = toGraphY(point.y, bounds.min, bounds.max, invert);
+      return `${index === 0 ? "M" : "L"} ${point.x},${y}`;
+    })
+    .join(" ");
+}
+
+export default function CurveGraph({ easing, accuracy, onControlPointDrag }: CurveGraphProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const samplePath = useMemo(() => buildSamplePath(easing, accuracy), [accuracy, easing]);
+  const graphBounds = useMemo(() => getGraphBounds(easing, accuracy), [accuracy, easing]);
+  const isOscillation = isOscillationEasing(easing);
+  const invert = easing.type === "bounce";
+  const referenceStartY = toGraphY(isOscillation ? 0 : 0, graphBounds.min, graphBounds.max, invert);
+  const referenceEndY = toGraphY(isOscillation ? 0 : 1, graphBounds.min, graphBounds.max, invert);
 
   return (
-    <GridSurface
-      className="relative mx-auto flex aspect-square w-full max-w-[331px] items-center justify-center overflow-visible"
-    >
+    <GridSurface className="relative mx-auto flex aspect-square w-full max-w-[331px] items-center justify-center overflow-visible">
       <svg
         ref={svgRef}
-        viewBox={viewBox}
+        viewBox="0 0 1 1"
         className="aspect-square h-full w-full"
-        style={{ touchAction: "none", overflow: "visible" }}
+        style={{ touchAction: easing.type === "bezier" ? "none" : "auto", overflow: "visible" }}
       >
         <defs>
           <linearGradient id="curveGradient" x1="0" y1="1" x2="1" y2="0">
@@ -43,9 +65,9 @@ export default function CurveGraph({ curve, onControlPointDrag }: CurveGraphProp
 
         <line
           x1={0}
-          y1={1}
+          y1={referenceStartY}
           x2={1}
-          y2={0}
+          y2={referenceEndY}
           stroke="#3a4252"
           strokeWidth={0.003}
           strokeDasharray="0.014 0.01"
@@ -53,7 +75,7 @@ export default function CurveGraph({ curve, onControlPointDrag }: CurveGraphProp
         />
 
         <path
-          d={path}
+          d={easing.type === "bezier" ? generateSVGPath(easing.curve) : samplePath}
           fill="none"
           stroke="url(#curveGradient)"
           strokeWidth={0.014}
@@ -61,28 +83,32 @@ export default function CurveGraph({ curve, onControlPointDrag }: CurveGraphProp
           filter="url(#curveGlow)"
         />
 
-        <ControlPoint
-          x={curve.x1}
-          y={curve.y1}
-          anchorX={0}
-          anchorY={0}
-          strokeColor="#1a7beb"
-          glowColor="rgba(26, 123, 235, 0.3)"
-          onDrag={(x, y) => onControlPointDrag("p1", x, y)}
-          svgRef={svgRef}
-        />
+        {easing.type === "bezier" && (
+          <>
+            <ControlPoint
+              x={easing.curve.x1}
+              y={easing.curve.y1}
+              anchorX={0}
+              anchorY={0}
+              strokeColor="#1a7beb"
+              glowColor="rgba(26, 123, 235, 0.3)"
+              onDrag={(x, y) => onControlPointDrag("p1", x, y)}
+              svgRef={svgRef}
+            />
 
-        <ControlPoint
-          x={curve.x2}
-          y={curve.y2}
-          anchorX={1}
-          anchorY={1}
-          strokeColor="#ffffff"
-          lineColor="rgba(255, 255, 255, 0.8)"
-          glowColor="rgba(255, 255, 255, 0.16)"
-          onDrag={(x, y) => onControlPointDrag("p2", x, y)}
-          svgRef={svgRef}
-        />
+            <ControlPoint
+              x={easing.curve.x2}
+              y={easing.curve.y2}
+              anchorX={1}
+              anchorY={1}
+              strokeColor="#ffffff"
+              lineColor="rgba(255, 255, 255, 0.8)"
+              glowColor="rgba(255, 255, 255, 0.16)"
+              onDrag={(x, y) => onControlPointDrag("p2", x, y)}
+              svgRef={svgRef}
+            />
+          </>
+        )}
       </svg>
     </GridSurface>
   );

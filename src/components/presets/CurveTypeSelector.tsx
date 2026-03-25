@@ -1,28 +1,35 @@
 "use client";
 
-const types = [
-  { label: "Bezier", active: true },
-  { label: "Spring", active: false },
-  { label: "Bounce", active: false },
-  { label: "Wiggle", active: false },
-  { label: "Overshoot", active: false },
+import { EasingType } from "@/types";
+
+const types: Array<{ label: string; value: EasingType }> = [
+  { label: "Bezier", value: "bezier" },
+  { label: "Spring", value: "spring" },
+  { label: "Bounce", value: "bounce" },
+  { label: "Wiggle", value: "wiggle" },
+  { label: "Overshoot", value: "overshoot" },
 ];
 
-export default function CurveTypeSelector() {
+interface CurveTypeSelectorProps {
+  value: EasingType;
+  onChange: (type: EasingType) => void;
+}
+
+export default function CurveTypeSelector({ value, onChange }: CurveTypeSelectorProps) {
   return (
     <div className="flex w-full justify-center overflow-x-auto">
       <div className="mx-auto flex h-full min-w-max gap-1 rounded-[12px] border border-border bg-bg p-[5px]">
-        {types.map((t) => (
+        {types.map((type) => (
           <button
-            key={t.label}
-            disabled={!t.active}
+            key={type.value}
+            onClick={() => onChange(type.value)}
             className={`flex h-full shrink-0 items-center justify-center rounded-[8px] px-5 text-[12px] font-semibold uppercase tracking-[0.05em] transition-colors ${
-              t.active
+              value === type.value
                 ? "bg-accent text-white shadow-[0_0_12px_rgba(26,123,235,0.3)]"
-                : "cursor-not-allowed text-text-secondary"
+                : "text-text-secondary hover:text-text-primary"
             }`}
           >
-            {t.label}
+            {type.label}
           </button>
         ))}
       </div>

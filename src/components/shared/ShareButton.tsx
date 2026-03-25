@@ -1,26 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { BezierCurve } from "@/types";
-import { encodeCurveToURL } from "@/lib/url";
+import { EasingDefinition, SamplingAccuracy } from "@/types";
+import { encodeEasingToURL } from "@/lib/url";
 
 interface ShareButtonProps {
-  curve: BezierCurve;
+  easing: EasingDefinition;
   duration: number;
   delay: number;
+  accuracy: SamplingAccuracy;
 }
 
-export default function ShareButton({ curve, duration, delay }: ShareButtonProps) {
+export default function ShareButton({ easing, duration, delay, accuracy }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
     try {
-      const url = encodeCurveToURL(curve, duration, delay);
+      const url = encodeEasingToURL(easing, duration, delay, accuracy);
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback
+      /* noop */
     }
   };
 
