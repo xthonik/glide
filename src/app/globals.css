@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #080808;
+  --color-surface: #080808;
+  --color-surface-hover: #19191d;
+  --color-border: #1d2129;
+  --color-border-light: #3a4252;
+  --color-text-primary: #e5e5e5;
+  --color-text-secondary: #808a9c;
+  --color-text-muted: #808a9c;
+  --color-accent: #1a7beb;
+  --color-accent-hover: #1565c0;
+  --color-accent-muted: rgba(26, 123, 235, 0.12);
+  --color-curve-start: #2b8cff;
+  --color-curve-end: #ffffff;
+  --color-glow: rgba(168, 85, 247, 0.3);
+
+  --font-sans: "Golos Text", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  background-color: var(--color-bg);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-light);
+  border-radius: 2px;
+}
+
+/* Range slider styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 20px;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: color-mix(in srgb, var(--color-text-secondary) 34%, transparent);
+  border-radius: 999px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 3px solid var(--color-bg);
+  margin-top: -5.5px;
+  box-shadow: 0 0 0 1px rgba(26, 123, 235, 0.4), 0 0 12px rgba(26, 123, 235, 0.3);
+}
+input[type="range"]::-moz-range-track {
+  height: 2px;
+  background: color-mix(in srgb, var(--color-text-secondary) 34%, transparent);
+  border-radius: 999px;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 1px rgba(26, 123, 235, 0.4), 0 0 12px rgba(26, 123, 235, 0.3);
+}
+
+/* Number input spinner hidden */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
