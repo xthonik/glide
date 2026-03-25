@@ -6,9 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 permissions:
   contents: read
   pages: write
@@ -20,8 +17,6 @@ concurrency:
 
 jobs:
   build:
-    outputs:
-      can_deploy: ${{ steps.pages-readiness.outputs.can_deploy }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,57 +28,8 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Detect Pages configuration
-        id: pages-state
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PAGES_ADMIN_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN }}
-        run: |
-          response_file="$(mktemp)"
-          status_code="$(curl -sS -o "$response_file" -w "%{http_code}" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")"
-
-          if [ "$status_code" = "200" ]; then
-            build_type="$(node -e 'const fs = require("fs"); const payload = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); process.stdout.write(payload.build_type || "legacy");' "$response_file")"
-            echo "state=enabled" >> "$GITHUB_OUTPUT"
-            echo "build_type=$build_type" >> "$GITHUB_OUTPUT"
-          elif [ "$status_code" = "404" ]; then
-            echo "state=missing" >> "$GITHUB_OUTPUT"
-            echo "build_type=missing" >> "$GITHUB_OUTPUT"
-          else
-            echo "::error::Unexpected GitHub Pages API status: $status_code"
-            cat "$response_file"
-            exit 1
-          fi
-
-          if [ -n "$PAGES_ADMIN_TOKEN" ]; then
-            echo "can_enable=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "can_enable=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Configure Pages
-        if: steps.pages-state.outputs.state == 'enabled' && steps.pages-state.outputs.build_type == 'workflow'
         uses: actions/configure-pages@v5
-
-      - name: Enable and configure Pages
-        if: steps.pages-state.outputs.state == 'missing' && steps.pages-state.outputs.can_enable == 'true'
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-          token: ${{ secrets.PAGES_ADMIN_TOKEN }}
-
-      - name: Report manual Pages setup requirement
-        if: steps.pages-state.outputs.state == 'missing' && steps.pages-state.outputs.can_enable != 'true'
-        run: |
-          echo "::notice::GitHub Pages is not enabled for this repository. Add a PAGES_ADMIN_TOKEN secret to auto-enable it, or enable Pages manually in Settings -> Pages."
-
-      - name: Report incompatible Pages source
-        if: steps.pages-state.outputs.state == 'enabled' && steps.pages-state.outputs.build_type != 'workflow'
-        run: |
-          echo "::notice::GitHub Pages is enabled, but the publishing source is not set to GitHub Actions. Switch Settings -> Pages -> Source to GitHub Actions before using this workflow."
 
       - name: Install dependencies
         run: npm ci
@@ -94,24 +40,11 @@ jobs:
           GITHUB_PAGES: "true"
 
       - name: Upload Pages artifact
-        if: steps.pages-state.outputs.build_type == 'workflow' || (steps.pages-state.outputs.state == 'missing' && steps.pages-state.outputs.can_enable == 'true')
         uses: actions/upload-pages-artifact@v4
         with:
           path: out
 
-      - name: Set deploy readiness
-        id: pages-readiness
-        run: |
-          if [ "${{ steps.pages-state.outputs.state }}" = "enabled" ] && [ "${{ steps.pages-state.outputs.build_type }}" = "workflow" ]; then
-            echo "can_deploy=true" >> "$GITHUB_OUTPUT"
-          elif [ "${{ steps.pages-state.outputs.state }}" = "missing" ] && [ "${{ steps.pages-state.outputs.can_enable }}" = "true" ]; then
-            echo "can_deploy=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "can_deploy=false" >> "$GITHUB_OUTPUT"
-          fi
-
   deploy:
-    if: needs.build.outputs.can_deploy == 'true'
     needs: build
     runs-on: ubuntu-latest
     environment:
