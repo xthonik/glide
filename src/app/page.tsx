@@ -9,8 +9,15 @@ import PresetGrid from "@/components/presets/PresetGrid";
 import AnimationPreview from "@/components/preview/AnimationPreview";
 import CodePanel from "@/components/code-output/CodePanel";
 import ShareButton from "@/components/shared/ShareButton";
+import { DEFAULT_ACCURACY, DEFAULT_DELAY, DEFAULT_DURATION, getDefaultEasing } from "@/lib/easing";
 
 export default function Home() {
+  const initialState = {
+    easing: getDefaultEasing("bezier"),
+    duration: DEFAULT_DURATION,
+    delay: DEFAULT_DELAY,
+    accuracy: DEFAULT_ACCURACY,
+  };
   const {
     easing,
     duration,
@@ -22,7 +29,7 @@ export default function Home() {
     setDelay,
     setAccuracy,
     setControlPoint,
-  } = useCurveState();
+  } = useCurveState(initialState);
 
   const sectionTitleClass = "text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary";
   const cardClass = "min-w-0 rounded-[12px] border border-border p-6";

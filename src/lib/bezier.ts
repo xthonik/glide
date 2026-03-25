@@ -6,7 +6,7 @@ import { BezierCurve } from "@/types";
  */
 export function generateSVGPath(curve: BezierCurve): string {
   const { x1, y1, x2, y2 } = curve;
-  return `M 0,1 C ${x1},${1 - y1} ${x2},${1 - y2} 1,0`;
+  return `M 0,1 C ${formatSvgNumber(x1)},${formatSvgNumber(1 - y1)} ${formatSvgNumber(x2)},${formatSvgNumber(1 - y2)} 1,0`;
 }
 
 /**
@@ -30,6 +30,14 @@ export function clampX(value: number): number {
 export function roundTo(value: number, decimals: number = 2): number {
   const factor = Math.pow(10, decimals);
   return Math.round(value * factor) / factor;
+}
+
+export function formatSvgNumber(value: number, decimals: number = 6): string {
+  const rounded = roundTo(value, decimals);
+  if (Object.is(rounded, -0)) {
+    return "0";
+  }
+  return rounded.toString();
 }
 
 /**

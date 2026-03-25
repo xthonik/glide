@@ -31,6 +31,8 @@ const VALID_BOUNCE_PRESETS = Object.keys(BOUNCE_PRESETS) as BouncePresetName[];
 const VALID_WIGGLE_PRESETS = Object.keys(WIGGLE_PRESETS) as WigglePresetName[];
 const VALID_OVERSHOOT_PRESETS = Object.keys(OVERSHOOT_PRESETS.out) as OvershootPresetName[];
 
+type SearchParamValue = string | string[] | undefined;
+
 function parseNumber(searchParams: URLSearchParams, key: string, fallback: number): number {
   const value = searchParams.get(key);
   if (value === null) return fallback;
@@ -240,6 +242,27 @@ export function decodeEasingFromURL(searchParams: URLSearchParams): EasingToolSt
     delay,
     accuracy,
   };
+}
+
+export function decodeEasingFromSearchParams(
+  searchParams: Record<string, SearchParamValue>
+): EasingToolState {
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (typeof value === "string") {
+      params.set(key, value);
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        params.append(key, item);
+      }
+    }
+  }
+
+  return decodeEasingFromURL(params);
 }
 
 export function updateURLState(

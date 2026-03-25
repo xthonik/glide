@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { EasingDefinition, SamplingAccuracy } from "@/types";
-import { generateSVGPath } from "@/lib/bezier";
+import { formatSvgNumber, generateSVGPath } from "@/lib/bezier";
 import { getGraphBounds, getPreviewSamples, isOscillationEasing } from "@/lib/easing";
 import GridSurface from "@/components/shared/GridSurface";
 import ControlPoint from "./ControlPoint";
@@ -27,7 +27,7 @@ function buildSamplePath(easing: EasingDefinition, accuracy: SamplingAccuracy): 
   return samples
     .map((point, index) => {
       const y = toGraphY(point.y, bounds.min, bounds.max, invert);
-      return `${index === 0 ? "M" : "L"} ${point.x},${y}`;
+      return `${index === 0 ? "M" : "L"} ${formatSvgNumber(point.x)},${formatSvgNumber(y)}`;
     })
     .join(" ");
 }

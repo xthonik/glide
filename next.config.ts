@@ -1,5 +1,15 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {};
+const isGitHubPages = process.env.GITHUB_PAGES === "true";
+const repoName = "easing-tool";
+
+const nextConfig: NextConfig = isGitHubPages
+  ? {
+      output: "export",
+      basePath: `/${repoName}`,
+      assetPrefix: `/${repoName}/`,
+      trailingSlash: true,
+    }
+  : {};
 
 export default nextConfig;

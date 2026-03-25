@@ -14,7 +14,7 @@ import {
   getGraphBounds,
   getPreviewSamples,
 } from "@/lib/easing";
-import { generateSVGPath } from "@/lib/bezier";
+import { formatSvgNumber, generateSVGPath } from "@/lib/bezier";
 
 interface PresetGridProps {
   easing: EasingDefinition;
@@ -41,7 +41,7 @@ function buildMiniPath(points: SamplePoint[], min: number, max: number, invert: 
     .map((point, index) => {
       const normalized = (point.y - min) / range;
       const y = invert ? normalized : 1 - normalized;
-      return `${index === 0 ? "M" : "L"} ${point.x},${y}`;
+      return `${index === 0 ? "M" : "L"} ${formatSvgNumber(point.x)},${formatSvgNumber(y)}`;
     })
     .join(" ");
 }
