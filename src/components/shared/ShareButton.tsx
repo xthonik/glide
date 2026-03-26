@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { EasingDefinition, SamplingAccuracy } from "@/types";
 import { encodeEasingToURL } from "@/lib/url";
+import FluentCopySelect24Regular from "@/components/shared/FluentCopySelect24Regular";
 
 interface ShareButtonProps {
   easing: EasingDefinition;
@@ -34,7 +35,7 @@ export default function ShareButton({ easing, duration, delay, accuracy }: Share
           : "border-border-light text-text-secondary hover:border-text-secondary/40 hover:text-text-primary"
       }`}
     >
-      <span>⎘</span>
+      <FluentCopySelect24Regular aria-hidden="true" className="size-3.5 shrink-0" />
       {copied ? "Link Copied!" : "Copy Share Link"}
     </button>
   );

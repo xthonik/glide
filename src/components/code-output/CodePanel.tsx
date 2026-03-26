@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { EasingDefinition, Platform, SamplingAccuracy } from "@/types";
 import { codeGenerators, platformLabels } from "@/lib/code-templates";
+import FluentCopySelect24Regular from "@/components/shared/FluentCopySelect24Regular";
 
 interface CodePanelProps {
   easing: EasingDefinition;
@@ -38,13 +39,13 @@ export default function CodePanel({ easing, duration, accuracy }: CodePanelProps
 
   return (
     <div className="flex min-w-0 flex-col gap-3">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-1">
           {platforms.map((entry) => (
             <button
               key={entry}
               onClick={() => setPlatform(entry)}
-              className={`rounded-[6px] px-[10px] py-1 text-[10px] font-semibold uppercase leading-[15px] tracking-[0.05em] transition-colors ${
+              className={`flex h-[29px] items-center rounded-[6px] px-[10px] text-[10px] font-semibold uppercase leading-[15px] tracking-[0.05em] transition-colors ${
                 platform === entry ? "bg-accent text-white" : "text-text-secondary hover:text-text-primary"
               }`}
             >
@@ -54,9 +55,9 @@ export default function CodePanel({ easing, duration, accuracy }: CodePanelProps
         </div>
         <button
           onClick={handleCopy}
-          className="flex h-[29px] shrink-0 items-center gap-[6px] self-start rounded-[6px] border border-border-light px-[13px] py-[7px] text-[10px] font-semibold uppercase leading-[15px] tracking-[0.05em] text-text-secondary transition-colors hover:border-text-secondary/40 hover:text-text-primary"
+          className="flex h-[29px] shrink-0 items-center gap-[6px] rounded-[6px] border border-border-light px-[13px] py-[7px] text-[10px] font-semibold uppercase leading-[15px] tracking-[0.05em] text-text-secondary transition-colors hover:border-text-secondary/40 hover:text-text-primary"
         >
-          <span>{copied ? "✓" : "⎘"}</span>
+          <FluentCopySelect24Regular aria-hidden="true" className="size-3.5 shrink-0" />
           {copied ? "Copied" : "Copy to Clipboard"}
         </button>
       </div>

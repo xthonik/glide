@@ -26,10 +26,20 @@ interface InputRowProps {
   max: number;
   step: number;
   clampXAxis?: boolean;
+  labelWidthClass?: string;
   onChange: (value: number) => void;
 }
 
-function InputRow({ label, value, min, max, step, clampXAxis, onChange }: InputRowProps) {
+function InputRow({
+  label,
+  value,
+  min,
+  max,
+  step,
+  clampXAxis,
+  labelWidthClass = "w-[52px]",
+  onChange,
+}: InputRowProps) {
   const [draftValue, setDraftValue] = useState(roundTo(value, step < 1 ? 2 : 0).toString());
   const [isEditing, setIsEditing] = useState(false);
   const formattedValue = roundTo(value, step < 1 ? 2 : 0).toString();
@@ -54,25 +64,29 @@ function InputRow({ label, value, min, max, step, clampXAxis, onChange }: InputR
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-[72px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.05em] text-text-secondary">
+    <div className="flex w-full items-center gap-3">
+      <span className={`${labelWidthClass} shrink-0 text-[11px] font-semibold uppercase tracking-[0.05em] text-text-secondary`}>
         {label}
       </span>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(event) => {
-          let nextValue = parseFloat(event.target.value);
-          if (clampXAxis) {
-            nextValue = clampX(nextValue);
-          }
-          onChange(nextValue);
-        }}
-        className="h-5 flex-1"
-      />
+      <div className="flex-1">
+        <div className="mx-auto" style={{ width: "calc(100% - 20px)" }}>
+          <input
+            type="range"
+            min={min}
+            max={max}
+            step={step}
+            value={value}
+            onChange={(event) => {
+              let nextValue = parseFloat(event.target.value);
+              if (clampXAxis) {
+                nextValue = clampX(nextValue);
+              }
+              onChange(nextValue);
+            }}
+            className="block h-5 w-full"
+          />
+        </div>
+      </div>
       <input
         type="number"
         min={min}
@@ -90,7 +104,7 @@ function InputRow({ label, value, min, max, step, clampXAxis, onChange }: InputR
             event.currentTarget.blur();
           }
         }}
-        className="h-[26px] w-16 rounded-[6px] border border-text-secondary bg-transparent px-2 text-right font-mono text-[12px] leading-4 text-text-primary outline-none transition-colors focus:border-accent"
+        className="h-[26px] w-14 rounded-[6px] border border-text-secondary bg-transparent px-2 text-right font-mono text-[12px] leading-4 text-text-primary outline-none transition-colors focus:border-accent"
       />
     </div>
   );
@@ -144,15 +158,16 @@ function AccuracyControls({
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex w-full items-center gap-3">
       <button
         type="button"
         onClick={focusInput}
-        className="w-[72px] shrink-0 cursor-default text-left text-[11px] font-semibold uppercase tracking-[0.05em] text-text-secondary"
+        className="w-[52px] shrink-0 cursor-default text-left text-[11px] font-semibold uppercase tracking-[0.05em] text-text-secondary"
       >
         Accuracy
       </button>
-      <div className="group relative h-8 flex-1 select-none">
+      <div className="flex-1">
+        <div className="group relative mx-auto h-8 select-none" style={{ width: "calc(100% - 20px)" }}>
         <input
           ref={inputRef}
           type="range"
@@ -222,6 +237,7 @@ function AccuracyControls({
             />
           ))}
         </div>
+        </div>
       </div>
     </div>
   );
@@ -267,6 +283,7 @@ export default function EasingControls({
           max={1}
           step={0.01}
           clampXAxis
+          labelWidthClass="w-7"
           onChange={(value) => onEasingChange({ type: "bezier", curve: { ...easing.curve, x1: value } })}
         />
         <InputRow
@@ -275,6 +292,7 @@ export default function EasingControls({
           min={-1}
           max={2}
           step={0.01}
+          labelWidthClass="w-7"
           onChange={(value) => onEasingChange({ type: "bezier", curve: { ...easing.curve, y1: value } })}
         />
         <InputRow
@@ -284,6 +302,7 @@ export default function EasingControls({
           max={1}
           step={0.01}
           clampXAxis
+          labelWidthClass="w-7"
           onChange={(value) => onEasingChange({ type: "bezier", curve: { ...easing.curve, x2: value } })}
         />
         <InputRow
@@ -292,6 +311,7 @@ export default function EasingControls({
           min={-1}
           max={2}
           step={0.01}
+          labelWidthClass="w-7"
           onChange={(value) => onEasingChange({ type: "bezier", curve: { ...easing.curve, y2: value } })}
         />
       </div>

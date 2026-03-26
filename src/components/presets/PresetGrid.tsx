@@ -98,7 +98,7 @@ export default function PresetGrid({ easing, accuracy, onSelect }: PresetGridPro
     <button
       key={label}
       onClick={() => onSelect(nextEasing)}
-      className={`inline-flex h-[30.5px] items-center gap-2 rounded-full border px-3 text-[11px] font-medium uppercase tracking-[0.05em] transition-colors ${
+      className={`inline-flex h-[30.5px] items-center gap-2 rounded-[8px] border px-3 text-[11px] font-medium uppercase tracking-[0.05em] transition-colors ${
         active
           ? "border-accent bg-accent/10 text-accent"
           : "border-border-light bg-transparent text-text-secondary hover:text-text-primary hover:border-text-secondary/40"

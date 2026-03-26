@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NEXT_PRIVATE_LOCAL_WEBPACK=1 next dev",
+    "clean:dev-runtime": "find . -path './.git' -prune -o -name '._*' -exec rm -f {} + && rm -rf .next",
+    "dev": "npm run clean:dev-runtime && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

@@ -55,7 +55,7 @@ export default function CurveGraph({ easing, accuracy, onControlPointDrag }: Cur
             <stop offset="100%" stopColor="#ffffff" />
           </linearGradient>
           <filter id="curveGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="0.014" result="blur" />
+            <feGaussianBlur stdDeviation="0.07" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />

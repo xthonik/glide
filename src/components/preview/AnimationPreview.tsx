@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, SVGProps } from "react";
 import { useEffect, useRef, useState } from "react";
 import { AnimationProperty, EasingDefinition, SamplingAccuracy } from "@/types";
 import { getCssEasingValue, getPreviewSamples, isOscillationEasing } from "@/lib/easing";
@@ -28,6 +28,28 @@ const properties: { key: AnimationProperty; label: string }[] = [
   { key: "rotateY", label: "Rotate Y" },
   { key: "shape", label: "Shape" },
 ];
+
+function FluentReplay24Filled(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="M4.5 5.385A9.98 9.98 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12q0-.717.098-1.407A.7.7 0 0 1 2.802 10c.476 0 .826.446.766.919A8.5 8.5 0 1 0 5.518 6.5H7.25a.75.75 0 0 1 0 1.5h-3.5A.75.75 0 0 1 3 7.25v-3.5a.75.75 0 0 1 1.5 0zm6.728 2.805A1.5 1.5 0 0 0 9 9.501V14.5a1.5 1.5 0 0 0 2.228 1.311l4.499-2.498a1.5 1.5 0 0 0 0-2.623z"
+      />
+    </svg>
+  );
+}
+
+function FluentArrowRepeatAll28Filled(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" {...props}>
+      <path
+        fill="currentColor"
+        d="M15.293 2.293a1 1 0 0 1 1.415 0l4 4a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.415-1.414L17.586 8h-7.335a6.25 6.25 0 0 0-6.246 6h-.004a6.22 6.22 0 0 0 1.297 3.568h-.003a1 1 0 1 1-1.633 1.154A8.2 8.2 0 0 1 2.001 14h.004a8.25 8.25 0 0 1 8.247-8h7.335l-2.293-2.293a1 1 0 0 1 0-1.414M25.997 14h-.004a8.25 8.25 0 0 1-8.247 8h-7.34l2.294 2.293a1 1 0 0 1-1.414 1.414l-4-4a1 1 0 0 1 0-1.414l4-4a1 1 0 0 1 1.414 1.414L10.407 20h7.34a6.25 6.25 0 0 0 6.244-6h.005a6.22 6.22 0 0 0-1.297-3.568h.002a1 1 0 1 1 1.633-1.154A8.2 8.2 0 0 1 25.997 14"
+      />
+    </svg>
+  );
+}
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -294,11 +316,11 @@ export default function AnimationPreview({ easing, duration, delay, accuracy }: 
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setReplayToken((token) => token + 1)}
-            className="flex size-7 items-center justify-center rounded-[8px] border border-border-light text-[14px] leading-5 text-text-secondary transition-colors hover:border-text-secondary/40 hover:text-text-primary"
+            className="flex size-7 items-center justify-center rounded-[8px] border border-border-light text-text-secondary transition-colors hover:border-text-secondary/40 hover:text-text-primary"
             title="Play Again"
             aria-label="Replay preview"
           >
-            ↺
+            <FluentReplay24Filled aria-hidden="true" className="size-3.5" />
           </button>
           <button
             onClick={() => setLooping((current) => !current)}
@@ -311,20 +333,7 @@ export default function AnimationPreview({ easing, duration, delay, accuracy }: 
             aria-pressed={looping}
             aria-label="Loop preview"
           >
-            <svg aria-hidden="true" viewBox="0 0 14 8" className="h-[8px] w-[14px]" fill="none">
-              <path
-                d="M1 4c1.1-1.33 2.17-2 3.2-2 1.7 0 2.27 1.1 2.8 2 .53.9 1.1 2 2.8 2 1.03 0 2.1-.67 3.2-2"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeWidth="1.4"
-              />
-              <path
-                d="M1 4c1.1 1.33 2.17 2 3.2 2 1.7 0 2.27-1.1 2.8-2 .53-.9 1.1-2 2.8-2 1.03 0 2.1.67 3.2 2"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeWidth="1.4"
-              />
-            </svg>
+            <FluentArrowRepeatAll28Filled aria-hidden="true" className="size-3.5" />
           </button>
         </div>
       </div>
@@ -335,15 +344,15 @@ export default function AnimationPreview({ easing, duration, delay, accuracy }: 
         </p>
       )}
 
-      <div className="flex max-w-[292px] flex-wrap gap-2">
+      <div className="grid w-full grid-cols-5 gap-2">
         {properties.map((property) => (
           <button
             key={property.key}
             onClick={() => setSelectedProperty(property.key)}
-            className={`flex h-[21px] w-[52px] items-center justify-center rounded-[8px] border px-px py-[7px] text-center transition-colors ${
+            className={`flex h-[29px] w-full items-center justify-center rounded-[8px] border px-1 text-center transition-colors ${
               selectedProperty === property.key
-                ? "border-accent/40 bg-accent/10 text-accent"
-                : "border-border-light text-text-primary hover:border-text-secondary/40"
+                ? "border-accent bg-accent/10 text-accent"
+                : "border-border-light bg-transparent text-text-secondary hover:text-text-primary hover:border-text-secondary/40"
             }`}
             title={property.label}
             aria-pressed={selectedProperty === property.key}
