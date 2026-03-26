@@ -357,7 +357,7 @@ export default function AnimationPreview({ easing, duration, delay, accuracy }: 
             title={property.label}
             aria-pressed={selectedProperty === property.key}
           >
-            <span className="text-[7px] font-medium uppercase leading-[7px] tracking-[0.05em]">
+            <span className="text-[8px] font-medium uppercase leading-[7px] tracking-[0.05em]">
               {property.label}
             </span>
           </button>
