@@ -90,3 +90,19 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+/* ══ ASCII wake ════════════════════════════════════════════ */
+.asc {
+  /* Bencho's tokens, mapped onto this project's own: the dots are
+     the ink, so both point at the primary text colour. Set here on
+     the component's root so nothing leaks out. */
+  --ink: var(--color-text-primary);
+  --fill-on: var(--color-text-primary);
+  position: relative;
+  cursor: crosshair;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;}
+
+.asc-canvas { display: block; color: var(--fill-on, var(--ink)); }
